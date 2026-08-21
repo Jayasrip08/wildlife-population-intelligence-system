@@ -1,0 +1,6 @@
+=== Quarterly Wildlife Population Audit ===
+Region: Serengeti Reserve Sector 4
+Author: System Officer
+Shannon Index: 0.9684
+Simpson Index: 0.5299
+Health Score: 39.27%
