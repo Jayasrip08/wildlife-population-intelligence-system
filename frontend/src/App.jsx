@@ -72,9 +72,12 @@ function TopNavbar({ user }) {
         <input type="text" placeholder="Search species, bioacoustics, reports..." />
       </div>
       <div className="navbar-right">
-        <div className="nav-user" style={{ borderLeft: 'none', paddingLeft: 0 }}>
-          <div className="nav-avatar">{user.name.charAt(0)}</div>
-          <span>{user.name.split(' ')[0]}</span>
+        <div className="nav-user" style={{ borderLeft: 'none', paddingLeft: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div className="nav-avatar">{user?.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+            <span style={{ fontWeight: '600', fontSize: '0.88rem' }}>{user?.name || user?.username}</span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{ROLE_LABELS[user?.role] || user?.role}</span>
+          </div>
         </div>
       </div>
     </header>
@@ -87,21 +90,26 @@ function Sidebar({ user, onLogout, activeTab, setActiveTab }) {
       <div className="sidebar-section-label" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <GridMenuIcon /> MAIN MENU
       </div>
-      {NAV_ITEMS[user.role].map((label) => (
-        <a 
-          href="#" 
-          key={label} 
-          onClick={(e) => { e.preventDefault(); setActiveTab(label); }}
-          className={`nav-item ${activeTab === label ? 'active' : ''}`}
-        >
-          <span className="nav-icon">{getIconForLabel(label)}</span>
-          <span>{label}</span>
-        </a>
-      ))}
+      <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+        {NAV_ITEMS[user.role].map((label) => (
+          <a 
+            href="#" 
+            key={label} 
+            onClick={(e) => { e.preventDefault(); setActiveTab(label); }}
+            className={`nav-item ${activeTab === label ? 'active' : ''}`}
+          >
+            <span className="nav-icon">{getIconForLabel(label)}</span>
+            <span>{label}</span>
+          </a>
+        ))}
+      </div>
       
       <div className="sidebar-bottom">
         <div className="sidebar-divider"></div>
-        <button className="logout-btn" onClick={onLogout}>Sign Out</button>
+        <button className="logout-btn" onClick={onLogout}>
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          Sign Out
+        </button>
       </div>
     </aside>
   );
@@ -269,7 +277,7 @@ function ImageSpeciesWorkflow({ user }) {
   );
 }
 
-function BioacousticsWorkflow({ user }) {
+function LegacyBioacousticsWorkflow({ user }) {
   const [audioDetections, setAudioDetections] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -408,7 +416,7 @@ function BioacousticsWorkflow({ user }) {
   );
 }
 
-function BiodiversityAnalyticsWorkflow({ user }) {
+function LegacyBiodiversityAnalyticsWorkflow({ user }) {
   const [metrics, setMetrics] = useState({
     region: 'Serengeti National Park',
     shannon_index: 2.1405,
@@ -608,51 +616,7 @@ function PopulationWorkflow({ user }) {
             </div>
           )}
         </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>Image Analysis Capabilities</h3>
-          </div>
-          <ul style={{ lineHeight: '1.8', color: 'var(--text-md)', paddingLeft: '1.2rem', margin: 0 }}>
-            <li><strong>Automated Bounding Box Detection:</strong> Identifies spatial coordinates of animals within frame.</li>
-            <li><strong>Individual Animal Counting:</strong> Differentiates multiple specimens per capture.</li>
-            <li><strong>Image Quality Assessment:</strong> Evaluates sharpness, illumination, and occlusion score.</li>
-            <li><strong>Behavior Categorization:</strong> Identifies grazing, resting, alert, and predator response postures.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="card-header">
-          <h3>Recent Image Species Detections Log</h3>
-        </div>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Filename</th>
-              <th>Detected Species</th>
-              <th>Scientific Name</th>
-              <th>Confidence</th>
-              <th>Count</th>
-              <th>Location</th>
-              <th>Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
-            {imageDetections.map((item, idx) => (
-              <tr key={idx}>
-                <td><code>{item.filename}</code></td>
-                <td style={{ fontWeight: '600' }}>{item.species_detected}</td>
-                <td><i>{item.scientific_name}</i></td>
-                <td>{(item.confidence * 100).toFixed(1)}%</td>
-                <td><span className="role-badge rb-researcher">{item.count}</span></td>
-                <td>{item.location}</td>
-                <td>{item.behavior || 'Observed'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      )}
     </div>
   );
 }
@@ -729,50 +693,36 @@ function BioacousticsWorkflow({ user }) {
         <p className="page-subtitle">Analyze wildlife audio recordings using Librosa spectrogram extraction to classify bird songs, mammal vocalizations, and environmental calls.</p>
       </div>
 
-      <div className="two-col" style={{ gridTemplateColumns: '1fr 1fr', marginBottom: '1.5rem' }}>
-        <div className="card">
-          <div className="card-header">
-            <h3>Upload Audio Recording</h3>
-          </div>
-          <form onSubmit={handleUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <input 
-              type="file" 
-              accept="audio/*" 
-              onChange={(e) => setSelectedFile(e.target.files[0])}
-              style={{ padding: '0.6rem', border: '1px dashed var(--border)', borderRadius: '6px' }}
-              required 
-            />
-            <button type="submit" className="btn-primary" disabled={uploading}>
-              {uploading ? 'Processing Bioacoustic Spectrum...' : 'Analyze Audio Call Spectrum'}
-            </button>
-          </form>
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <div className="card-header">
+          <h3>Upload Audio Recording</h3>
+        </div>
+        <form onSubmit={handleUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <input 
+            type="file" 
+            accept="audio/*" 
+            onChange={(e) => setSelectedFile(e.target.files[0])}
+            style={{ padding: '0.6rem', border: '1px dashed var(--border)', borderRadius: '6px' }}
+            required 
+          />
+          <button type="submit" className="btn-primary" disabled={uploading}>
+            {uploading ? 'Processing Bioacoustic Spectrum...' : 'Analyze Audio Call Spectrum'}
+          </button>
+        </form>
 
-          {result && (
-            <div style={{ marginTop: '1.25rem', padding: '1rem', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #0284c7' }}>
-              <h4 style={{ margin: '0 0 0.5rem', color: '#0369a1' }}>Bioacoustic Spectrum Match</h4>
-              <div style={{ fontSize: '0.9rem', color: '#075985', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
-                <div><strong>Call Identified:</strong> {result.species_detected}</div>
-                <div><strong>Scientific:</strong> <i>{result.scientific_name}</i></div>
-                <div><strong>Vocalization Type:</strong> {result.call_type}</div>
-                <div><strong>Confidence Match:</strong> {(result.confidence * 100).toFixed(1)}%</div>
-                <div><strong>Clip Duration:</strong> {result.duration_seconds}s</div>
-                <div><strong>Center Frequency:</strong> {result.frequency_hz} Hz</div>
-              </div>
+        {result && (
+          <div style={{ marginTop: '1.25rem', padding: '1rem', background: '#f0f9ff', borderRadius: '8px', border: '1px solid #0284c7' }}>
+            <h4 style={{ margin: '0 0 0.5rem', color: '#0369a1' }}>Bioacoustic Spectrum Match</h4>
+            <div style={{ fontSize: '0.9rem', color: '#075985', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+              <div><strong>Call Identified:</strong> {result.species_detected}</div>
+              <div><strong>Scientific:</strong> <i>{result.scientific_name}</i></div>
+              <div><strong>Vocalization Type:</strong> {result.call_type}</div>
+              <div><strong>Confidence Match:</strong> {(result.confidence * 100).toFixed(1)}%</div>
+              <div><strong>Clip Duration:</strong> {result.duration_seconds}s</div>
+              <div><strong>Center Frequency:</strong> {result.frequency_hz} Hz</div>
             </div>
-          )}
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>Audio Features Supported</h3>
           </div>
-          <ul style={{ lineHeight: '1.8', color: 'var(--text-md)', paddingLeft: '1.2rem', margin: 0 }}>
-            <li><strong>Bird Call Recognition:</strong> Avian song frequency matching and harmonic breakdown.</li>
-            <li><strong>Mammal Vocalizations:</strong> Infrasonic elephant rumbles & territorial predator roars.</li>
-            <li><strong>Amphibian & Insect Sounds:</strong> Micro-frequency acoustic event detection.</li>
-            <li><strong>Environmental Noise Filtering:</strong> Dynamic signal-to-noise ratio enhancement.</li>
-          </ul>
-        </div>
+        )}
       </div>
 
       <div className="card">
@@ -891,7 +841,7 @@ function BiodiversityAnalyticsWorkflow({ user }) {
   );
 }
 
-function ReportsWorkflow({ user }) {
+function LegacyReportsWorkflow({ user }) {
   const [reports, setReports] = useState([]);
   const [title, setTitle] = useState('');
   const [region, setRegion] = useState('Serengeti Reserve Sector 4');
