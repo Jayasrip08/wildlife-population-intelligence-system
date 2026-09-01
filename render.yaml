@@ -1,0 +1,35 @@
+services:
+  # Backend FastAPI Service
+  - type: web
+    name: wildlife-backend
+    env: docker
+    dockercontext: ./backend
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wildlife-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+
+  # Frontend React Web Service
+  - type: web
+    name: wildlife-frontend
+    env: docker
+    dockercontext: ./frontend
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: wildlife-backend
+          property: host
+
+databases:
+  - name: wildlife-db
+    plan: free
+    databaseName: wildlife_db
+    user: postgres
