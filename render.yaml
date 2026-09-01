@@ -14,13 +14,13 @@ services:
       - key: SECRET_KEY
         generateValue: true
 
-  # Frontend React Web Service
+  # Frontend React Static Web Site
   - type: web
     name: wildlife-frontend
-    runtime: docker
-    dockerContext: frontend
-    dockerfilePath: frontend/Dockerfile
-    plan: free
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
         fromService:
