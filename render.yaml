@@ -1,10 +1,16 @@
+databases:
+  - name: wildlife-db
+    databaseName: wildlife_db
+    user: postgres
+    plan: free
+
 services:
   # Backend FastAPI Service
   - type: web
     name: wildlife-backend
     env: docker
-    dockercontext: ./backend
-    dockerfilePath: Dockerfile
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
     plan: free
     envVars:
       - key: DATABASE_URL
@@ -18,8 +24,8 @@ services:
   - type: web
     name: wildlife-frontend
     env: docker
-    dockercontext: ./frontend
-    dockerfilePath: Dockerfile
+    dockerContext: ./frontend
+    dockerfilePath: ./frontend/Dockerfile
     plan: free
     envVars:
       - key: VITE_API_URL
@@ -27,9 +33,3 @@ services:
           type: web
           name: wildlife-backend
           property: host
-
-databases:
-  - name: wildlife-db
-    plan: free
-    databaseName: wildlife_db
-    user: postgres
