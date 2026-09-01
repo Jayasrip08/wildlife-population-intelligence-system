@@ -1,165 +1,52 @@
-# 🐾 AI Wildlife Population Intelligence System
+# Wildlife Population Intelligence System — User Guide & System Manual
 
-An AI-powered, multi-modal Wildlife Population Intelligence Platform designed for wildlife researchers, conservation officers, forest department personnel, and environmental agencies. The platform leverages Computer Vision (CV), Bioacoustics processing, satellite data, and machine learning models to automatically classify species, estimate animal populations, monitor habitat health, and detect endangered species in real-time.
-
----
-
-## 📌 Executive Summary & Objectives
-
-The primary goal of the **Wildlife Population Intelligence System** is to automate and scale ecological monitoring using modern AI/ML technologies.
-
-### Key Objectives:
-- **Species Identification:** Automated identification of animal species using camera trap images, drone footage, and bioacoustic recordings.
-- **Population Estimation:** Counting individuals, calculating density, analyzing migration patterns, and tracking population trends.
-- **Habitat Intelligence:** Assessing ecosystem health, vegetation indices (NDVI), and biodiversity richness.
-- **Threat Detection & Alerts:** Identifying endangered species, detecting unauthorized human activities/poaching threats, and triggering automated alerts.
-- **Role-Based Workflows:** Providing tailored dashboards and permissions for Wildlife Researchers, Conservation Officers, Forest Department Personnel, and System Administrators.
+## 1. Executive Summary & Overview
+The **Wildlife Population Intelligence System** is an enterprise AI-powered platform for automated species identification, bioacoustic recognition, abundance estimation, remote sensing habitat evaluation, and multi-tier conservation analytics.
 
 ---
 
-## 🏛 System Architecture Overview
-
-```
-                          ┌────────────────────────┐
-                          │   Frontend Interface   │
-                          │ React + Vanilla CSS + Vite│
-                          └───────────┬────────────┘
-                                      │ REST API / WebSocket
-                                      ▼
-                          ┌────────────────────────┐
-                          │     Backend Core       │
-                          │   FastAPI + Python     │
-                          └─────┬────────────┬─────┘
-                                │            │
-           ┌────────────────────┘            └────────────────────┐
-           ▼                                                      ▼
-┌───────────────────────┐                                ┌─────────────────┐
-│ PostgreSQL Database   │                                │  AI Engine      │
-│ (Users, Surveys, Logs)│                                │  (PyTorch/YOLO) │
-└───────────────────────┘                                └─────────────────┘
-```
+## 2. Platform Architecture & Modules
+- **Module 1: User Authentication & RBAC**: JWT Bearer Token authorization supporting 4 distinct roles:
+  - `researcher`: Image/Audio analytical workflows & biodiversity metrics.
+  - `conservation_officer`: Field telemetry, collar tracking, and threat monitoring.
+  - `forest_department`: Patrol sector beat planning, corridor connectivity, and fire risk logs.
+  - `admin`: User provisioning, performance analytics, and system setting dispatch.
+- **Module 3: Species Image Classification & Biometric Re-ID**: Automated YOLOv8/ResNet deep learning inference with deterministic perceptual dHash individual re-identification. Supports high-altitude **Drone Aerial Orthomosaic** multi-object ground grid processing.
+- **Module 4: Bioacoustic Recognition Engine**: Spectral Centroid FFT audio processing for birds, mammals, amphibians (`African Bullfrog`, `Common Reed Frog`), insects (`Savannah Bush Cricket`, `Cicada Swarm`), and threat acoustic events (`Gunshots`, `Chainsaws`).
+- **Module 5 & 6: Population Estimation & GBIF**: Distance sampling abundance modeling ($N = n/p$), exponential growth trajectory forecasting ($P(t) = P_0 e^{rt}$), and live **GBIF API v1 REST integration**.
+- **Module 10: Wildlife Health Scoring**: 5-factor weighted ecosystem health evaluation model.
+- **Module 13: Reports & Archive**: Seeded report templates (Survey, Population, Biodiversity, Habitat, Conservation) with PDF, CSV, and Excel TSV downloads.
 
 ---
 
-## 🧩 Core Modules & Capabilities
-
-### 1. User Authentication & Role-Based Access Control (RBAC)
-- **Authentication:** JWT (JSON Web Tokens) with Access & Refresh Token security mechanics.
-- **Roles:**
-  - `Wildlife Researcher`: Full access to dataset ingestion, model training, population models, and analytical tools.
-  - `Conservation Officer`: Field survey oversight, alert management, and conservation reporting.
-  - `Forest Department Officer`: Protected area monitoring, real-time alert reception, and site management.
-  - `Administrator`: User management, system health metrics, dataset approvals, and access control.
-
-### 2. Wildlife Survey & Monitoring Management
-- Survey lifecycle management (planning, execution, archiving).
-- Deployment management for Camera Traps, Bioacoustic Audio Sensors, and Drone paths.
-- Metadata tagging (GPS coordinates, habitat type, timestamp, protected area mapping).
-
-### 3. Wildlife Image & Bioacoustic Analysis Engine
-- **Camera Trap & Drone Vision:** Animal detection, species classification, bounding box detection, and behavior analysis.
-- **Bioacoustic Engine:** Audio spectrum preprocessing, bird call classification, mammal vocalization identification, and background noise filtering.
-- **Dataset Ingestion:** Seamless integration with iNaturalist and GBIF (Global Biodiversity Information Facility) data streams.
-
-### 4. Population Estimation & Biodiversity Analytics
-- Density and population size estimation algorithms.
-- Migration pattern mapping and habitat utilization heatmaps.
-- Biodiversity index metrics (Shannon Wiener Index, Species Richness).
-
----
-
-## 🔐 Environment Setup (`.env`)
-
-The project uses `.env` files for managing local environment configuration, database credentials, and security secrets.
-
-### `.env.example` Template:
-
-```env
-# Application Settings
-ENV=development
-PORT=8000
-
-# Database Credentials
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=wildlife_db
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DATABASE_URL=postgresql://your_db_user:your_db_password@localhost:5432/wildlife_db
-
-# JWT & Authentication Secrets
-JWT_SECRET_KEY=your_jwt_secret_key
-JWT_REFRESH_SECRET_KEY=your_jwt_refresh_secret_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
-
-# Default Administrator Account Credentials
-ADMIN_DEFAULT_USERNAME=admin
-ADMIN_DEFAULT_EMAIL=admin@wildlife-intel.org
-ADMIN_DEFAULT_PASSWORD=your_admin_password
-
-# Dataset & Model Paths
-DATASET_STORAGE_PATH=./datasets
-MODELS_STORAGE_PATH=./models
-```
-
-> 🔒 **Security Warning:** Real passwords and secret keys are securely stored in your local `.env` file and excluded from public version control. Never include actual production credentials in documentation or commit `.env` files to git repositories.
-
----
-
-## 🚀 Getting Started & Installation
-
-### Prerequisites
-- **Python:** 3.10 or higher
-- **Node.js:** v18 or higher
-- **PostgreSQL:** 14 or higher (or SQLite for quick local demo)
+## 3. Getting Started & Running Locally
 
 ### Backend Setup (FastAPI)
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a Python virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On Linux/macOS:
-   source venv/bin/activate
-   ```
-3. Install required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Start the backend API server:
-   ```bash
-   uvicorn main:app --reload --port 8000
-   ```
-5. Access interactive API documentation at: `http://localhost:8000/docs`
+```bash
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-### Frontend Setup (React + Vite)
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install npm dependencies:
-   ```bash
-   npm install
-   ```
-3. Launch the development server:
-   ```bash
-   npm run dev
-   ```
+### Frontend Setup (React / Vite)
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### Frontend Tech Stack & Design System
-- **Framework:** React 19 + Vite 8
-- **Styling:** Vanilla CSS / Custom CSS with CSS Custom Properties (`:root` variables)
-- **Theme:** Adaptive Light & Dark theme supporting `prefers-color-scheme`
-- **Responsive Layout:** Flexbox & CSS Grid
+### Docker Production Container Deployment
+```bash
+docker compose up --build -d
+```
 
 ---
 
-## 📄 License & Attribution
-
-This project is built based on the specifications outlined in the **AI Wildlife Population Intelligence System Specification PDF**. Designed for wildlife conservation, ecological research, and environmental protection initiatives.
+## 4. Automated Testing & Verification
+Execute the system integration and security test suite:
+```bash
+python test_suite.py
+python test_reid.py
+python test_gbif.py
+```

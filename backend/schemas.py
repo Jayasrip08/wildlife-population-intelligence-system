@@ -22,6 +22,7 @@ class UserResponse(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    refresh_token: Optional[str] = None
     token_type: str
 
 class SurveyCreate(BaseModel):
@@ -173,3 +174,34 @@ class ConservationRecommendationResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# ================= MILESTONE 4 SCHEMAS =================
+
+class SystemPerformanceMetricsResponse(BaseModel):
+    species_classification_accuracy: float
+    animal_detection_precision: float
+    species_identification_recall: float
+    audio_classification_accuracy: float
+    animal_call_precision: float
+    noise_filtering_effectiveness: float
+    population_estimation_accuracy: float
+    image_inference_latency_ms: float
+    audio_processing_latency_ms: float
+    api_response_time_ms: float
+    concurrent_monitoring_capacity: int
+    status: str
+
+class GISFeatureItem(BaseModel):
+    id: str
+    name: str
+    type: str  # camera_trap, collar, zone, corridor
+    latitude: float
+    longitude: float
+    status: str
+    details: Dict[str, Any]
+
+class GISFeatureResponse(BaseModel):
+    region: str
+    total_nodes: int
+    features: List[GISFeatureItem]
+

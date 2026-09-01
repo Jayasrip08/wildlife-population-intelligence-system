@@ -14,6 +14,11 @@ AUDIO_SPECIES_CATALOG = [
     {"name": "African Grey Parrot Call", "scientific": "Psittacus erithacus", "type": "Whistle & Squawk", "freq": 3200.0},
     {"name": "Chimpanzee Pant-Hoot", "scientific": "Pan troglodytes", "type": "Group Vocalization", "freq": 1200.0},
     {"name": "African Bullfrog Croak", "scientific": "Pyxicephalus adspersus", "type": "Amphibian Call", "freq": 850.0},
+    {"name": "Common Reed Frog Chorus", "scientific": "Hyperolius viridiflavus", "type": "Amphibian Vocalization", "freq": 1400.0},
+    {"name": "Savannah Bush Cricket Stridulation", "scientific": "Gryllotalpa africana", "type": "Insect Sound", "freq": 4800.0},
+    {"name": "Cicada Swarm Acoustic Resonance", "scientific": "Platypleura capensis", "type": "Insect Sound", "freq": 5600.0},
+    {"name": "Chainsaw Noise Threat Detection", "scientific": "Anthropogenic Activity", "type": "Acoustic Threat Event", "freq": 1100.0},
+    {"name": "Gunshot Impulse Acoustic Spike", "scientific": "Illegal Poaching Activity", "type": "Critical Acoustic Threat", "freq": 3500.0}
 ]
 
 class BioacousticAnalyzer:

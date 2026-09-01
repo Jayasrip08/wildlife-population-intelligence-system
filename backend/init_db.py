@@ -3,6 +3,11 @@ Initialize database with demo users for testing.
 Run this ONCE to set up the database.
 """
 import os
+import sys
+
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 from sqlalchemy.orm import Session
 import database, models, auth, schemas
 
