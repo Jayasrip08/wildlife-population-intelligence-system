@@ -31,5 +31,4 @@ services:
 databases:
   - name: wildlife-db
     databaseName: wildlife_db
-    user: postgres
     plan: free
